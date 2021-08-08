@@ -1,8 +1,9 @@
 <?php
 
-use App\Http\Controllers\ArticleController;
-use App\Http\Controllers\EpisodeController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ArticleController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\EpisodeController;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,11 +20,11 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth'])->name('dashboard');
+Route::middleware(['auth'])->group(function () {
+    Route::get('dashboard', DashboardController::class)->name('dashboard');
+    Route::get('article/{article:slug}', ArticleController::class)->name('article.show');
+    Route::get('episode/{episode:slug}', EpisodeController::class)->name('episode.show');
+});
 
-Route::get('article/{article:slug}', ArticleController::class);
-Route::get('episode/{episode:slug}', EpisodeController::class);
 
 require __DIR__ . '/auth.php';
